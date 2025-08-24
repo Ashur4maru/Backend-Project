@@ -25,4 +25,9 @@ class User extends Authenticatable
         'verjaardag' => 'date',
         'is_admin' => 'boolean',
     ];
+
+    public function faqs()
+    {
+        return $this->hasMany(Faq::class);
+    }
 }

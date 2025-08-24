@@ -30,4 +30,11 @@ Route::get('/news/create', [NewsController::class, 'create'])->name('news.create
 Route::post('/news', [NewsController::class, 'store'])->name('news.store');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 
+Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
+Route::get('/faqs/create', [FaqController::class, 'create'])->name('faqs.create');
+Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
+Route::get('/faqs/{id}/{type}/edit', [FaqController::class, 'edit'])->name('faqs.edit');
+Route::put('/faqs/{id}/{type}', [FaqController::class, 'update'])->name('faqs.update');
+Route::delete('/faqs/{id}/{type}', [FaqController::class, 'destroy'])->name('faqs.destroy');
+
 require __DIR__.'/auth.php';
