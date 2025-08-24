@@ -10,10 +10,10 @@ class IsAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->is_admin) {
-            return $next($request);
+        if (!Auth::check() || !Auth::user()->is_admin) {
+            return redirect('/')->with('error', 'Accès non autorisé');
         }
 
-        return redirect('/')->with('error', 'Accès refusé. Réservé aux administrateurs.');
+        return $next($request);
     }
 }

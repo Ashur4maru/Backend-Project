@@ -11,7 +11,7 @@ class NewsController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->only(['create', 'store']);
-        //$this->middleware('is_admin')->only(['create', 'store']);
+        $this->middleware('is_admin')->only(['create', 'store']);
     }
 
     public function index()

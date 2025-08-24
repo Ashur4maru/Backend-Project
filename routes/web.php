@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\FaqController; // Ajout de cette ligne
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\NewsController;
-
 
 Route::get('/', function () {
     return view('welcome');

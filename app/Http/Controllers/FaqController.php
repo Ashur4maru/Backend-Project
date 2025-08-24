@@ -15,21 +15,18 @@ class FaqController extends Controller
         $this->middleware('is_admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
-    // Afficher la FAQ (accessible à tous)
     public function index()
     {
         $categories = FaqCategory::with('faqs')->get();
         return view('faqs.index', compact('categories'));
     }
 
-    // Afficher le formulaire pour ajouter une catégorie ou question (admin)
     public function create()
     {
         $categories = FaqCategory::all();
         return view('faqs.create', compact('categories'));
     }
 
-    // Enregistrer une catégorie ou question (admin)
     public function store(Request $request)
     {
         $request->validate([
@@ -54,7 +51,6 @@ class FaqController extends Controller
         return redirect()->route('faqs.index')->with('success', 'Ajout effectué avec succès.');
     }
 
-    // Afficher le formulaire pour modifier une catégorie ou question (admin)
     public function edit($id, $type)
     {
         $categories = FaqCategory::all();
@@ -66,7 +62,6 @@ class FaqController extends Controller
         return view('faqs.edit', compact('item', 'type', 'categories'));
     }
 
-    // Mettre à jour une catégorie ou question (admin)
     public function update(Request $request, $id, $type)
     {
         $request->validate([
@@ -91,7 +86,6 @@ class FaqController extends Controller
         return redirect()->route('faqs.index')->with('success', 'Mise à jour effectuée avec succès.');
     }
 
-    // Supprimer une catégorie ou question (admin)
     public function destroy($id, $type)
     {
         if ($type === 'category') {
