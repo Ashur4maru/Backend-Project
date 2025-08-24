@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\Profile;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,76 +13,65 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display a public profile page by username.
+     * Display the authenticated user's profile page.
      */
-    public function show($username): View
+    public function show(Request $request): View
     {
-        $profile = Profile::where('username', $username)->firstOrFail();
-        if (!$profile) {
-        abort(404, 'Profiel niet gevonden');
-    }
-        return view('profiles.show', compact('profile'));
+        $user = $request->user();
+        if (!$user) {
+            abort(404, 'User not authenticated');
+        }
+        return view('profiles.show', compact('user'));
     }
 
     /**
      * Display the user's profile edit form.
      */
     public function edit(Request $request): View
-{
-    $user = $request->user();
-    if (!$user->profile) {
-        $user->profile()->create(['user_id' => $user->id]);
+    {
+        $user = $request->user();
+        return view('profiles.edit', compact('user'));
     }
-    return view('profiles.edit', [
-        'user' => $user,
-        'profile' => $user->profile,
-    ]);
-}
 
     /**
      * Update the user's profile information.
      */
     public function update(Request $request): RedirectResponse
     {
-        $profile = $request->user()->profile;
+        $user = $request->user();
 
         $request->validate([
-            'username' => 'nullable|string|max:255|unique:profiles,username,' . $profile->id,
-            'birthday' => 'nullable|date',
+            'username' => 'nullable|string|max:255|unique:users,username,' . $user->id,
+            'verjaardag' => 'nullable|date',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'about_me' => 'nullable|string|max:500',
-            'name' => 'required|string|max:255', // From Breeze
-            'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
-        // Update User model (Breeze fields)
-        $request->user()->fill([
-            'name' => $request->name,
-            'email' => $request->email,
-        ]);
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        // Update Profile model
         if ($request->hasFile('profile_picture')) {
-            // Delete old profile picture if exists
-            if ($profile->profile_picture) {
-                Storage::disk('public')->delete($profile->profile_picture);
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
             }
             $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $profile->profile_picture = $path;
+            $user->profile_picture = $path;
         }
 
-        $profile->username = $request->username;
-        $profile->birthday = $request->birthday;
-        $profile->about_me = $request->about_me;
-        $profile->save();
+        $user->fill([
+            'name' => $request->name,
+            'email' => $request->email,
+            'username' => $request->username,
+            'verjaardag' => $request->verjaardag,
+            'about_me' => $request->about_me,
+        ]);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('profile.show')->with('status', 'profile-updated');
     }
 
     /**
@@ -97,8 +85,11 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
 
+        Auth::logout();
         $user->delete();
 
         $request->session()->invalidate();

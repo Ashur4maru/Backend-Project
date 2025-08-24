@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'verjaardag',
+        'about_me',
+        'profile_picture',
     ];
 
     /**
@@ -32,6 +36,12 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+
+    protected $casts = [
+    'birthday' => 'date',
+    ];
+
 
     /**
      * Get the attributes that should be cast.
