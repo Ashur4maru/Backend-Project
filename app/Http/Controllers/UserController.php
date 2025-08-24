@@ -22,7 +22,6 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        // Empêcher un admin de se supprimer lui-même
         if ($user->id === Auth::id()) {
             return redirect()->route('users.index')->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
         }
