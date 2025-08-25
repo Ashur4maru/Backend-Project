@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class FixUsernameInUsersTable extends Migration
 {
     public function up(): void
     {
@@ -19,6 +19,11 @@ return new class extends Migration
                 ) AND id != (SELECT MIN(id) FROM users u2 WHERE u2.username = users.username)
             ) AS sub
         )');
+
+        // Supprimer la contrainte UNIQUE si elle existe
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropUnique('users_username_unique');
+        });
 
         // Appliquer la contrainte UNIQUE
         Schema::table('users', function (Blueprint $table) {

@@ -4,20 +4,20 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h2 class="text-2xl font-bold mb-4">Foire aux Questions (FAQ)</h2>
-
+ 
                     @if(session('success'))
                         <div class="mb-4 text-green-600">{{ session('success') }}</div>
                     @endif
                     @if(session('error'))
                         <div class="mb-4 text-red-600">{{ session('error') }}</div>
                     @endif
-
+ 
                     @auth
                         @if(auth()->user()->is_admin)
                             <a href="{{ route('faqs.create') }}" class="mb-4 inline-block bg-blue-500 text-white px-4 py-2 rounded">Ajouter une catégorie ou question</a>
                         @endif
                     @endauth
-
+ 
                     @foreach($categories as $category)
                         <div class="mb-6">
                             <h3 class="text-xl font-semibold mb-2">{{ $category->name }}</h3>
