@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\FaqController; // Ajout de cette ligne
+use App\Http\Controllers\FaqController; 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +16,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
+
+Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,5 +40,12 @@ Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
 Route::get('/faqs/{id}/{type}/edit', [FaqController::class, 'edit'])->name('faqs.edit');
 Route::put('/faqs/{id}/{type}', [FaqController::class, 'update'])->name('faqs.update');
 Route::delete('/faqs/{id}/{type}', [FaqController::class, 'destroy'])->name('faqs.destroy');
+
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/contact', [ContactController::class, 'index'])->name('contact.index');
+    Route::get('/admin/contact/{contact}', [ContactController::class, 'showMessage'])->name('contact.show-message');
+    Route::patch('/admin/contact/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contact.mark-read');
+    Route::delete('/admin/contact/{contact}', [ContactController::class, 'destroy'])->name('contact.destroy');
+});
 
 require __DIR__.'/auth.php';
