@@ -17,10 +17,10 @@
                     </x-nav-link>
 
                     <x-nav-link :href="url('/faqs')" :active="request()->is('faqs')">
-                            {{ __('Faqs') }}
+                            {{ __('Q&A') }}
                         </x-nav-link>
                         <x-nav-link :href="url('/news')" :active="request()->is('news')">
-                            {{ __('News') }}
+                            {{ __('Nieuws') }}
                         </x-nav-link>
                         <x-nav-link :href="url('/contact')" :active="request()->is('contact ')">
                             {{ __('Contact') }}
