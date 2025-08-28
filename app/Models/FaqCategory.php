@@ -9,7 +9,7 @@ class FaqCategory extends Model
 {
     use HasFactory;
 
-    protected $table = 'faq_categories'; // Explicitement définir la table
+    protected $table = 'faq_categories'; 
     protected $fillable = ['name'];
 
     public function faqs()

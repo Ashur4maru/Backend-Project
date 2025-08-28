@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class AdminUserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run de database seeds.
      */
     public function run(): void
     {

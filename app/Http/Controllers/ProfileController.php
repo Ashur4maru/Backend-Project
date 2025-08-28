@@ -14,7 +14,7 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display a public profile page by username.
+     * Geef een openbare profielpagina weer op basis van gebruikersnaam.
      */
     public function show($username): View
     {
@@ -26,7 +26,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display the user's profile edit form.
+     * Toon de edit form voor de user
      */
     public function edit(Request $request): View
 {
@@ -41,7 +41,7 @@ class ProfileController extends Controller
 }
 
     /**
-     * Update the user's profile information.
+     * Bewerkt user profiel info
      */
     public function update(Request $request): RedirectResponse
     {
@@ -52,11 +52,11 @@ class ProfileController extends Controller
             'birthday' => 'nullable|date',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'about_me' => 'nullable|string|max:500',
-            'name' => 'required|string|max:255', // From Breeze
+            'name' => 'required|string|max:255', // 
             'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
         ]);
 
-        // Update User model (Breeze fields)
+        // Bewerkt User model (Breeze fields)
         $request->user()->fill([
             'name' => $request->name,
             'email' => $request->email,
@@ -68,9 +68,8 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        // Update Profile model
+        // Bewerkt Profiel
         if ($request->hasFile('profile_picture')) {
-            // Delete old profile picture if exists
             if ($profile->profile_picture) {
                 Storage::disk('public')->delete($profile->profile_picture);
             }
@@ -87,7 +86,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Verwijder User account.
      */
     public function destroy(Request $request): RedirectResponse
     {

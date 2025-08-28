@@ -21,13 +21,13 @@ class Contact extends Model
         'is_read' => 'boolean',
     ];
 
-    // Scope pour obtenir les messages non lus
+    // Mogelijkheid om ongelezen berichten te krijgen
     public function scopeUnread($query)
     {
         return $query->where('is_read', false);
     }
 
-    // Scope pour obtenir les messages lus
+    // Mogelijkheid om gelezen berichten te krijgen
     public function scopeRead($query)
     {
         return $query->where('is_read', true);

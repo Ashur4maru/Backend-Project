@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class ContactController extends Controller
 {
     /**
-     * Afficher le formulaire de contact
+     * Formulier tonen
      */
     public function show(): View
     {
@@ -31,8 +31,8 @@ class ContactController extends Controller
     }
 
     /**
-     * Dashboard admin : afficher les messages de contact
-     * (Accessible seulement aux admins)
+     * Dashboard admin : Contactberichten weergeven
+     * (Alleen toegankelijk voor beheerders)
      */
     public function index(): View
     {
@@ -45,7 +45,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Marquer un message comme lu
+     * Markeer een bericht als gelezen
      */
     public function markAsRead(Contact $contact): RedirectResponse
     {
@@ -59,7 +59,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Supprimer un message
+     * Bericht verwijderen
      */
     public function destroy(Contact $contact): RedirectResponse
     {
@@ -73,13 +73,14 @@ class ContactController extends Controller
     }
 
     /**
-     * Afficher les détails d'un message
+     * Bekijk berichtdetails
      */
     public function showMessage(Contact $contact): View
     {
         $this->middleware('is_admin');
         
-        // Marquer automatiquement comme lu lors de la consultation
+        // Automatisch markeren als gelezen bij het bekijken
+
         if (!$contact->is_read) {
             $contact->update(['is_read' => true]);
         }
